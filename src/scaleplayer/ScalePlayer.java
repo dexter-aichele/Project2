@@ -4,11 +4,15 @@
 package scaleplayer;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -20,27 +24,38 @@ import javafx.stage.Stage;
  * @since 2017-01-26
  */
 public class ScalePlayer extends Application {
-    
+
+    // 0 2 4 5 7 9 11 12
+
     @Override
-    public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
+    public void start(Stage stage) {
+        Button playScaleButton = new Button("Play scale");
+        Button stopPlayingButton = new Button("Stop playing");
+        playScaleButton.setOnAction(event -> {
+            System.out.println("Hello World!");
         });
-        
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        BorderPane borderPane = createBorderPane(stage);
+        HBox hBox = new HBox(10);
+        hBox.setAlignment(Pos.CENTER);
+        borderPane.setCenter(hBox);
+        hBox.getChildren().addAll(playScaleButton, stopPlayingButton);
+        Scene scene = new Scene(borderPane, 300, 250);
+        stage.setTitle("Scale Player");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public BorderPane createBorderPane(Stage stage) {
+        BorderPane borderPane = new BorderPane();
+        MenuBar menuBar = new MenuBar();
+        menuBar.prefWidthProperty().bind(stage.widthProperty());
+        borderPane.setTop(menuBar);
+        Menu fileMenu = new Menu("File");
+        MenuItem quitMenuItem = new MenuItem("Quit");
+        quitMenuItem.setOnAction(event -> Platform.exit());
+        fileMenu.getItems().add(quitMenuItem);
+        menuBar.getMenus().add(fileMenu);
+        return borderPane;
     }
 
     /**
